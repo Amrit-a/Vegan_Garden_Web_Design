@@ -20,6 +20,7 @@
         <li><a href="#" onclick="showPage('order',this)">Order</a></li>
         <li><a href="#" onclick="showPage('about',this)">About</a></li>
         <li><a href="#" onclick="showPage('contact',this)">Contact</a></li>
+        <li><a href="#" onclick="showPage('admin-login',this)">Admin</a></li>
       </ul>
       <button class="nav-cta" onclick="showPage('order',null)">
         Order Now
@@ -36,7 +37,7 @@
           savoury meals to homemade cakes.
         </p>
         <div class="hero-btns">
-          <button class="btn-primary"  onclick="showPage('order',null)">
+          <button class="btn-primary" onclick="showPage('order',null)">
             Order for Pickup
           </button>
           <button class="btn-outline" onclick="showPage('about',null)">
@@ -150,6 +151,8 @@
 
         <div class="cart-panel">
           <h3>🛒 Your Order</h3>
+          <div class="pickup-label">Pickup Date</div>
+          <input type="date" id="pickup-date" class="pickup-select" />
           <div id="cart-items">
             <p class="cart-empty">
               Your basket is empty.<br />Add something delicious!
@@ -348,11 +351,137 @@
           </div>
         </div>
       </div>
-      <footer>
-        <strong>Savoury & Sweet</strong> · Greenwich Market · All food is 100%
+       <footer>
+        <strong>Vegan Garden</strong> · Greenwich Market · All food is 100%
         vegan · Made fresh daily
       </footer>
     </div>
+
+
+    <!--- Admin Login  -->
+    <div id="page-admin-login" class="page">
+      <div
+        class="contact-wrap"
+        style="
+          max-width: 400px;
+          margin: 0 auto;
+          text-align: center;
+          padding-top: 5rem;
+        "
+      >
+        <h1>Manager Login</h1>
+        <p class="sub">Enter your credentials to access order management.</p>
+        <div class="contact-form">
+          <div class="form-group">
+            <label>Manager ID</label>
+            <input type="text" id="admin-id" placeholder="e.g. admin" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="admin-pass" placeholder="••••••••" />
+          </div>
+          <button class="submit-btn" onclick="handleAdminLogin()">
+            Login to Dashboard
+          </button>
+          <div
+            id="login-error"
+            style="
+              color: var(--terracotta);
+              margin-top: 10px;
+              display: none;
+              font-size: 0.85rem;
+            "
+          >
+            ❌ Invalid ID or Password.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-admin-dashboard" class="page">
+      <div
+        class="admin-container"
+        style="max-width: 1100px; margin: 0 auto; padding: 2rem"
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--sand);
+            padding-bottom: 1rem;
+          "
+        >
+          <h2 class="section-title" style="text-align: left; margin: 0">
+            Order Management
+          </h2>
+          <button
+            class="btn-outline"
+            style="color: var(--warm-dark); border-color: var(--muted)"
+            onclick="showPage('home')"
+          >
+            Logout
+          </button>
+        </div>
+
+        <div
+          style="margin: 2rem 0; display: flex; align-items: center; gap: 1rem"
+        >
+          <label style="font-weight: 500; color: var(--olive)"
+            >View Orders for Day:</label
+          >
+          <input
+            type="date"
+            id="admin-date-filter"
+            class="pickup-select"
+            style="max-width: 200px"
+            onchange="renderAdminDashboard()"
+          />
+        </div>
+
+        <div
+          class="admin-grid"
+          style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem"
+        >
+          <div class="feat" style="height: fit-content">
+            <h3>👨‍🍳 Prep List</h3>
+            <p
+              style="
+                font-size: 0.8rem;
+                color: var(--muted);
+                margin-bottom: 1rem;
+              "
+            >
+              Total items to prepare for the selected date.
+            </p>
+            <div id="prep-list-content">
+              <p style="font-style: italic; color: var(--muted)">
+                Select a date...
+              </p>
+            </div>
+          </div>
+
+          <div class="feat">
+            <h3>📋 Customer Ledger</h3>
+            <p
+              style="
+                font-size: 0.8rem;
+                color: var(--muted);
+                margin-bottom: 1rem;
+              "
+            >
+              Detailed view of every customer order.
+            </p>
+            <div id="ledger-content">
+              <p style="font-style: italic; color: var(--muted)">
+                Select a date...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="admin.js"></script>
     <script src="Vegan_Garden.js"></script>
   </body>
 </html>

@@ -258,16 +258,163 @@ function submitContact() {
   document.getElementById("c-msg").value = "";
 }
 function showPage(id, linkEl) {
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
-        document.getElementById("page-" + id).classList.add("active");
-        document
-          .querySelectorAll(".nav-links a")
-          .forEach((a) => a.classList.remove("active"));
-        if (linkEl) linkEl.classList.add("active");
-      }
+  document
+    .querySelectorAll(".page")
+    .forEach((p) => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document
+    .querySelectorAll(".nav-links a")
+    .forEach((a) => a.classList.remove("active"));
+  if (linkEl) linkEl.classList.add("active");
+}
 
+const picker = document.getElementById("pickup-date");
+picker.addEventListener("input", function (e) {
+  const day = new Date(this.value).getUTCDay();
+  if (![0, 5, 6].includes(day)) {
+    e.preventDefault();
+    this.value = "";
+    alert(
+      "We are only open Friday, Saturday, and Sunday. Please select one of those days!"
+    );
+  }
+});
+
+// Admin Page JavaScript
+
+// Hardcoded credentials for the manager
+const MANAGER_ID = "admin";
+const MANAGER_PASS = "1";
+
+function handleAdminLogin() {
+    const id = document.getElementById('admin-id').value;
+    const pass = document.getElementById('admin-pass').value;
+    const errorDiv = document.getElementById('login-error');
+
+    if (id === MANAGER_ID && pass === MANAGER_PASS) {
+        errorDiv.style.display = "none";
+        showPage('admin-dashboard');
+        // Clear inputs for security
+        document.getElementById('admin-id').value = "";
+        document.getElementById('admin-pass').value = "";
+    } else {
+        errorDiv.style.display = "block";
+    }
+}
+
+function renderAdminDashboard() {
+    const selectedDate = document.getElementById('admin-date-filter').value;
+    const prepDiv = document.getElementById('prep-list-content');
+    const ledgerDiv = document.getElementById('ledger-content');
+
+    // Filter orders for the chosen date from LocalStorage
+    let storedOrders = JSON.parse(localStorage.getItem('ss_orders')) || [];
+    const dailyOrders = storedOrders.filter(o => o.pickupDate === selectedDate);
+
+    if (dailyOrders.length === 0) {
+        prepDiv.innerHTML = "<p>No orders found for this date.</p>";
+        ledgerDiv.innerHTML = "<p>No orders found for this date.</p>";
+        return;
+    }
+
+    // 1. Calculate Prep Totals (Totals per item)
+    let totals = {};
+    dailyOrders.forEach(order => {
+        if (order.status !== "Cancelled") {
+            order.items.forEach(item => {
+                totals[item.name] = (totals[item.name] || 0) + item.qty;
+            });
+        }
+    });
+
+    let prepTable = `<table class="admin-table"><thead><tr><th>Item</th><th>Total Qty</th></tr></thead><tbody>`;
+    for (const [name, qty] of Object.entries(totals)) {
+        prepTable += `<tr><td>${name}</td><td><strong>x${qty}</strong></td></tr>`;
+    }
+    prepTable += `</tbody></table>`;
+    prepDiv.innerHTML = Object.keys(totals).length ? prepTable : "<p>All orders are cancelled.</p>";
+
+    // 2. Render Ledger (Individual customers)
+    let ledgerTable = `<table class="admin-table"><thead><tr><th>Ref</th><th>Items</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+    dailyOrders.forEach(order => {
+        const itemNames = order.items.map(i => `${i.name} (x${i.qty})`).join(', ');
+        const isCancelled = order.status === "Cancelled";
+        
+        ledgerTable += `
+            <tr style="opacity: ${isCancelled ? 0.5 : 1}">
+                <td>${order.ref}</td>
+                <td>${itemNames}</td>
+                <td><span class="status-tag ${isCancelled ? 'status-cancelled' : 'status-confirmed'}">${order.status}</span></td>
+                <td>
+                    ${!isCancelled ? `<button class="cancel-action-btn" onclick="managerCancelOrder('${order.ref}')">Cancel</button>` : '—'}
+                </td>
+            </tr>`;
+    });
+    ledgerTable += `</tbody></table>`;
+    ledgerDiv.innerHTML = ledgerTable;
+}
+
+function managerCancelOrder(ref) {
+    if (confirm("Cancel this order? The customer will see this when they check their status.")) {
+        let storedOrders = JSON.parse(localStorage.getItem('ss_orders')) || [];
+        storedOrders = storedOrders.map(o => {
+            if (o.ref === ref) o.status = "Cancelled";
+            return o;
+        });
+        localStorage.setItem('ss_orders', JSON.stringify(storedOrders));
+        renderAdminDashboard(); // Refresh view
+    }
+}
+function renderAdminDashboard() {
+    const selectedDate = document.getElementById('admin-date-filter').value;
+    const ledgerDiv = document.getElementById('ledger-content');
+    let storedOrders = JSON.parse(localStorage.getItem('ss_orders')) || [];
+    const dailyOrders = storedOrders.filter(o => o.pickupDate === selectedDate);
+
+    if (dailyOrders.length === 0) {
+        ledgerDiv.innerHTML = "<p>No orders found for this date.</p>";
+        return;
+    }
+
+    // UPDATED TABLE HEADER: Added "Payment"
+    let ledgerTable = `
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Ref</th>
+                    <th>Items</th>
+                    <th>Payment</th> 
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+    dailyOrders.forEach(order => {
+        const itemNames = order.items.map(i => `${i.name} (x${i.qty})`).join(', ');
+        const isCancelled = order.status === "Cancelled";
+        
+        // Format payment display
+        const paymentDisplay = order.paymentType.charAt(0).toUpperCase() + order.paymentType.slice(1);
+
+        ledgerTable += `
+            <tr style="opacity: ${isCancelled ? 0.5 : 1}">
+                <td>${order.ref}</td>
+                <td>${itemNames}</td>
+                <td style="font-weight: 500;">${paymentDisplay}</td>
+                <td><span class="status-tag ${isCancelled ? 'status-cancelled' : 'status-confirmed'}">${order.status}</span></td>
+                <td>
+                    ${!isCancelled ? `<button class="cancel-action-btn" onclick="managerCancelOrder('${order.ref}')">Cancel</button>` : '—'}
+                </td>
+            </tr>`;
+    });
+
+    ledgerTable += `</tbody></table>`;
+    ledgerDiv.innerHTML = ledgerTable;
+}
+
+
+/**/
 renderMenu(menuData.savoury, "savoury-list", "savoury");
 renderMenu(menuData.salads, "salads-list", "salads");
 renderMenu(menuData.sweets, "sweets-list", "sweets");
