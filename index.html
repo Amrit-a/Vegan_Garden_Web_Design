@@ -1,11 +1,358 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Vegan & Garden — Greenwich Market</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="Vegan_garden.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="logo" onclick="showPage('home',null)">Vegan Garden</div>
+      <ul class="nav-links">
+        <li>
+          <a href="#" class="active" onclick="showPage('home',this)">Home</a>
+        </li>
+        <li><a href="#" onclick="showPage('order',this)">Order</a></li>
+        <li><a href="#" onclick="showPage('about',this)">About</a></li>
+        <li><a href="#" onclick="showPage('contact',this)">Contact</a></li>
+      </ul>
+      <button class="nav-cta" onclick="showPage('order',null)">
+        Order Now
+      </button>
+    </nav>
+
+    <!-- ======== HOME ======== -->
+    <div id="page-home" class="page active">
+      <div class="hero">
+        <div class="hero-badge">📍 Greenwich Market, London</div>
+        <h1>Fresh. Vegan.<br /><em>Made with love.</em></h1>
+        <p>
+          Hand-crafted plant-based food at the heart of Greenwich Market — from
+          savoury meals to homemade cakes.
+        </p>
+        <div class="hero-btns">
+          <button class="btn-primary"  onclick="showPage('order',null)">
+            Order for Pickup
+          </button>
+          <button class="btn-outline" onclick="showPage('about',null)">
+            Our Story
+          </button>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-icon">🌿</div>
+          <h3>100% Vegan</h3>
+          <p>
+            Every dish is fully plant-based, made from fresh seasonal
+            ingredients.
+          </p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🧾</div>
+          <h3>Order Online</h3>
+          <p>
+            Skip the queue — order ahead and pick up at the stall, ready when
+            you arrive.
+          </p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">💳</div>
+          <h3>Pay Your Way</h3>
+          <p>
+            Online payment, card on pickup, or cash — whatever works for you.
+          </p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🏪</div>
+          <h3>Market Fresh</h3>
+          <p>Baked and cooked daily — no preservatives, no shortcuts.</p>
+        </div>
+      </div>
+
+      <h2 class="section-title">On the menu today</h2>
+      <p class="section-sub">
+        A small taste of what's waiting for you at the stall
+      </p>
+      <div class="preview-grid">
+        <div class="preview-card">
+          <div class="preview-img savoury">🥗</div>
+          <div class="preview-info">
+            <h4>Vegan Lasagna</h4>
+            <span>Savoury · Hot</span>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-img savoury">🫑</div>
+          <div class="preview-info">
+            <h4>Stuffed Peppers</h4>
+            <span>Savoury · Hot</span>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-img sweet">🍫</div>
+          <div class="preview-info">
+            <h4>Chocolate Raspberry Cake</h4>
+            <span>Dessert · Sweet</span>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-img sweet">🍋</div>
+          <div class="preview-info">
+            <h4>Lemon Drizzle Loaf</h4>
+            <span>Dessert · Sweet</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="location-strip">
+        <h3>Find Us at Greenwich Market</h3>
+        <p>
+          King William Walk, Greenwich, London SE10 9HZ &nbsp;·&nbsp; Open
+          Thurs–Sun 10am–5:30pm
+        </p>
+      </div>
+      <footer>
+        <strong>Vegan Garden</strong> · Greenwich Market · All food is 100%
+        vegan · Made fresh daily
+      </footer>
+    </div>
+
+    <!-- ======== ORDER ======== -->
+    <div id="page-order" class="page">
+      <div id="order-main" class="order-layout">
+        <div class="menu-panel">
+          <h2>Place Your Order</h2>
+          <p class="sub">
+            Choose your items below — pick up at the stall. Ready in ~20
+            minutes.
+          </p>
+
+          <div class="menu-section">
+            <div class="menu-section-title">🥗 Savoury Dishes</div>
+            <div class="menu-items" id="savoury-list"></div>
+          </div>
+          <div class="menu-section">
+            <div class="menu-section-title">🥗 Salads & Sides</div>
+            <div class="menu-items" id="salads-list"></div>
+          </div>
+          <div class="menu-section">
+            <div class="menu-section-title">🍰 Cakes & Desserts</div>
+            <div class="menu-items" id="sweets-list"></div>
+          </div>
+        </div>
+
+        <div class="cart-panel">
+          <h3>🛒 Your Order</h3>
+          <div id="cart-items">
+            <p class="cart-empty">
+              Your basket is empty.<br />Add something delicious!
+            </p>
+          </div>
+          <div id="cart-total-row" style="display: none" class="cart-total">
+            <span>Total</span><span id="cart-total">£0.00</span>
+          </div>
+          <div class="cart-footer">
+            <div class="pickup-label">Pickup time</div>
+            <select class="pickup-select" id="pickup-time">
+              <option>As soon as ready (~20 min)</option>
+              <option>In 30 minutes</option>
+              <option>In 45 minutes</option>
+              <option>In 1 hour</option>
+            </select>
+            <div class="payment-label">Payment method</div>
+            <div class="payment-options">
+              <label class="pay-opt"
+                ><input type="radio" name="payment" value="online" checked /> 💳
+                Pay online now</label
+              >
+              <label class="pay-opt"
+                ><input type="radio" name="payment" value="card" /> 📲 Card at
+                pickup</label
+              >
+              <label class="pay-opt"
+                ><input type="radio" name="payment" value="cash" /> 💵 Cash at
+                pickup</label
+              >
+            </div>
+            <button
+              class="checkout-btn"
+              id="checkout-btn"
+              disabled
+              onclick="completeOrder()"
+            >
+              Complete Order
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="order-confirm" class="order-confirm">
+        <div class="confirm-icon">✅</div>
+        <h2>Order Confirmed!</h2>
+        <p>
+          Your order has been received. We'll have it ready for you at the
+          stall.
+        </p>
+        <div class="order-ref" id="order-ref">Order #0000</div>
+        <p
+          id="confirm-payment"
+          style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem"
+        ></p>
+        <button class="btn-primary" onclick="resetOrder()">Order Again</button>
+      </div>
+      <footer style="display: none" id="order-footer">
+        <strong>Vegan Garden</strong> · Greenwich Market · All food is 100%
+        vegan
+      </footer>
+    </div>
+
+    <!-- ======== ABOUT ======== -->
+    <div id="page-about" class="page">
+      <div class="about-hero">
+        <h1>Our Story</h1>
+        <p>
+          Born from a love of plants, flavour, and community — welcome to Vegan
+          Garden.
+        </p>
+      </div>
+      <div class="about-content">
+        <h2>Who we are</h2>
+        <p>
+          We're a small, independent vegan food stall based in the heart of
+          Greenwich Market. Every item on our menu is made from scratch — baked
+          fresh each morning and cooked with care. No shortcuts, no
+          preservatives, just real food.
+        </p>
+        <h2>What drives us</h2>
+        <p>
+          We believe that vegan food doesn't have to be boring. Our menu blends
+          hearty savoury dishes — from rich vegan lasagna to stuffed roasted
+          vegetables — with homemade cakes and pastries that taste like they
+          came from someone's kitchen. Because they did.
+        </p>
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon">🌱</div>
+            <h4>Plant-based</h4>
+            <p>100% vegan — always</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">🤝</div>
+            <h4>Community</h4>
+            <p>Proud part of Greenwich Market</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">🍞</div>
+            <h4>Homemade</h4>
+            <p>Fresh daily, no mass production</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">♻️</div>
+            <h4>Sustainable</h4>
+            <p>Minimal packaging, seasonal produce</p>
+          </div>
+        </div>
+        <h2>Find us</h2>
+        <p>
+          You'll find us at Greenwich Market Thursday through Sunday. Look for
+          the warm smells and the handwritten chalkboard. We'd love to feed you.
+        </p>
+      </div>
+      <footer>
+        <strong>Vegan Garden</strong> · Greenwich Market · All food is 100%
+        vegan · Made fresh daily
+      </footer>
+    </div>
+
+    <!-- ======== CONTACT ======== -->
+    <div id="page-contact" class="page">
+      <div class="contact-wrap">
+        <h1>Get in Touch</h1>
+        <p class="sub">
+          Questions about allergens, bulk orders, or catering? Drop us a
+          message.
+        </p>
+        <div class="contact-grid">
+          <div class="contact-info">
+            <div class="info-item">
+              <div class="info-icon">📍</div>
+              <div>
+                <h4>Location</h4>
+                <p>
+                  Greenwich Market, King William Walk<br />Greenwich, London
+                  SE10 9HZ
+                </p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">🕐</div>
+              <div>
+                <h4>Opening Hours</h4>
+                <p>Thursday – Sunday<br />10:00am – 5:30pm</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">📧</div>
+              <div>
+                <h4>Email</h4>
+                <p>hello@savouryandsweet.co.uk</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">📱</div>
+              <div>
+                <h4>Instagram</h4>
+                <p>@savouryandsweet_greenwich</p>
+              </div>
+            </div>
+          </div>
+          <div class="contact-form">
+            <div class="form-group">
+              <label>Your name</label
+              ><input type="text" id="c-name" placeholder="Jane Smith" />
+            </div>
+            <div class="form-group">
+              <label>Email</label
+              ><input
+                type="email"
+                id="c-email"
+                placeholder="jane@example.com"
+              />
+            </div>
+            <div class="form-group">
+              <label>Subject</label>
+              <select id="c-subject">
+                <option>General enquiry</option>
+                <option>Allergen / ingredients question</option>
+                <option>Bulk or catering order</option>
+                <option>Feedback</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Message</label
+              ><textarea id="c-msg" placeholder="Your message..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="submitContact()">
+              Send Message
+            </button>
+            <div class="success-msg" id="contact-success">
+              ✅ Thanks! We'll get back to you within 24 hours.
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <strong>Savoury & Sweet</strong> · Greenwich Market · All food is 100%
+        vegan · Made fresh daily
+      </footer>
+    </div>
+    <script src="Vegan_Garden.js"></script>
+  </body>
 </html>
