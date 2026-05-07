@@ -150,7 +150,7 @@ nav {
   font-weight: 500;
   font-size: 0.95rem;
   transition: background 0.2s;
-  cursor:pointer;
+  cursor: pointer;
   border: none;
   font-family: "DM Sans", sans-serif;
 }
@@ -784,3 +784,56 @@ footer strong {
   color: var(--cream);
   font-family: "Playfair Display", serif;
 }
+
+/* For Admin page */
+/* Admin Specific Styling */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 10px;
+    background: var(--light-green);
+    color: var(--olive);
+    border-bottom: 2px solid var(--sand);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.admin-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--sand);
+}
+
+.status-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-confirmed { background: #eef2e6; color: var(--olive); }
+.status-cancelled { background: #fef0e6; color: var(--terracotta); }
+
+.cancel-action-btn {
+    background: transparent;
+    border: 1px solid var(--terracotta);
+    color: var(--terracotta);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.cancel-action-btn:hover {
+    background: var(--terracotta);
+    color: white;
+}
+/* Quick-glance colors for payment types in admin */
+td:contains("Online") { color: #2c1f0e; } /* Neutral/Dark */
+td:contains("Card") { color: #4a5e2f; }   /* Olive */
+td:contains("Cash") { color: #c45e2a; }   /* Terracotta */
